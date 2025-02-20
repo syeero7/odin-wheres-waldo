@@ -1,0 +1,25 @@
+{
+  "name": "wheres-waldo",
+  "version": "1.0.0",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "dev:api": "npm run dev -w @packages/api",
+    "test:api": "npm test -w @packages/api",
+    "start:api": "npm start -w @packages/api",
+    "build:api": "npm run build -w @packages/api",
+    "dev:app": "npm run dev -w @packages/app",
+    "test:app": "npm test -w @packages/app",
+    "start:app": "npm start -w @packages/app",
+    "build:app": "npm run build -w @packages/app",
+    "preview": "npm run preview -w @packages/app"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "workspaces": [
+    "packages/api",
+    "packages/app"
+  ]
+}

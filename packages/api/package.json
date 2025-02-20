@@ -1,0 +1,30 @@
+{
+  "name": "@packages/api",
+  "version": "0.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "vitest",
+    "dev": "node --env-file=../../.env --watch src/app.js",
+    "start": "node src/app.js",
+    "build": "npm install && npx prisma generate && node prisma/migrate.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "prisma": "^6.3.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.20.0",
+    "@prisma/client": "^6.3.1",
+    "eslint": "^9.20.1",
+    "globals": "^15.15.0",
+    "supertest": "^7.0.0",
+    "vitest": "^3.0.5"
+  }
+}
