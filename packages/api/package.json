@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "vitest",
-    "dev": "node --env-file=../../.env --watch src/app.js",
+    "dev": "node --env-file=.env --watch src/app.js",
     "start": "node src/app.js",
     "build": "npm install && npx prisma generate && node prisma/migrate.js"
   },
