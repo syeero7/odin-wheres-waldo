@@ -28,7 +28,7 @@ model Character {
 }
 
 model HighScores {
-  id    Int    @id @default(autoincrement())
-  name  String
-  score Int
+  id   Int    @id @default(autoincrement())
+  name String
+  time Int
 }

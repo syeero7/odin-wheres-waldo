@@ -20,7 +20,7 @@ CREATE TABLE "Character" (
 CREATE TABLE "HighScores" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
-    "score" INTEGER NOT NULL,
+    "time" INTEGER NOT NULL,
 
     CONSTRAINT "HighScores_pkey" PRIMARY KEY ("id")
 );
