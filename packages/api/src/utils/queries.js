@@ -14,11 +14,11 @@ export const getHighScores = async () => {
 };
 
 export const getHighestScore = async () => {
-  return await prisma.highScores.aggregate({ _min: { score: true } });
+  return await prisma.highScores.aggregate({ _min: { time: true } });
 };
 
-export const insertHighScore = async (name, score) => {
-  await prisma.highScores.create({ data: { name, score } });
+export const insertHighScore = async (name, time) => {
+  await prisma.highScores.create({ data: { name, time } });
 };
 
 export const getCharactersByPuzzleId = async (puzzleId) => {
