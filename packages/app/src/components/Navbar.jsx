@@ -33,7 +33,7 @@ function CustomNavLink({ to, testid = null, children }) {
   if (isActive) return null;
 
   return (
-    <StyledNavLink data-testid={testid} to={to}>
+    <StyledNavLink data-testid={testid} to={to} viewTransition>
       {children}
     </StyledNavLink>
   );
@@ -48,6 +48,11 @@ CustomNavLink.propTypes = {
 const Nav = styled.nav`
   box-shadow: 0 8px 6px -6px black;
   margin-bottom: 1em;
+
+  &:has(a:hover),
+  &:has(a:active) {
+    background-image: linear-gradient(to top, hsla(0, 0%, 20%, 0.5), #ddd);
+  }
 `;
 
 const List = styled.ul`
@@ -63,8 +68,7 @@ const ListItem = styled.li`
 
   &:has(a:hover),
   &:has(a:active) {
-    box-shadow: 0 8px 6px -6px black;
-    transform: scale(0.97);
+    transform: scale(0.95);
   }
 `;
 

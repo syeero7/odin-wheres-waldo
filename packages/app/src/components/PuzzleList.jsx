@@ -11,7 +11,7 @@ function PuzzleList() {
       <List>
         {images.map(({ id, src, characters }) => (
           <ListItem key={id}>
-            <StyledLink to={`puzzle/${id}`}>
+            <StyledLink to={`puzzle/${id}`} viewTransition>
               <Image src={src} alt={`puzzle #${id}`} width="450" />
               <Characters>
                 {characters.map(({ id, name, src }) => (
@@ -54,7 +54,9 @@ const ListItem = styled.li`
     box-shadow: hsla(0, 0%, 20%, 0.4) 5px 5px 6px;
   }
 
-  &:has(> a:hover) {
+  &:has(> a:hover),
+  &:has(> a:active),
+  &:has(> a:focus-visible) {
     background-color: #333;
   }
 `;
@@ -64,7 +66,10 @@ const StyledLink = styled(Link)`
   border-radius: 0.5em;
   transition: transform 0.2s;
 
-  &:hover {
+  &:hover,
+  &:active,
+  &:focus-visible {
+    outline: none;
     transform: scale(0.97);
     background-color: #fff;
   }
