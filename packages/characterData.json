@@ -1,0 +1,89 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "characters": [
+        {
+          "name": "Waldo",
+          "id": 1
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "characters": [
+        {
+          "name": "Waldo",
+          "id": 1
+        },
+        {
+          "name": "Odlaw",
+          "id": 2
+        },
+        {
+          "name": "Wenda",
+          "id": 4
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "characters": [
+        {
+          "name": "Waldo",
+          "id": 1
+        },
+        {
+          "name": "Odlaw",
+          "id": 2
+        },
+        {
+          "name": "Wizard",
+          "id": 3
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "characters": [
+        {
+          "name": "Waldo",
+          "id": 1
+        },
+        {
+          "name": "Odlaw",
+          "id": 2
+        },
+        {
+          "name": "Wizard",
+          "id": 3
+        },
+        {
+          "name": "Wenda",
+          "id": 4
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "characters": [
+        {
+          "name": "Waldo",
+          "id": 1
+        },
+        {
+          "name": "Odlaw",
+          "id": 2
+        },
+        {
+          "name": "Wizard",
+          "id": 3
+        },
+        {
+          "name": "Wenda",
+          "id": 4
+        }
+      ]
+    }
+  ]
+}
