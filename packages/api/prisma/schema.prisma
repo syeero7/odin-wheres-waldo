@@ -14,21 +14,31 @@ datasource db {
 }
 
 model Puzzle {
-  id         Int         @id @default(autoincrement())
-  characters Character[]
+  id                 Int          @id
+  characterPositions Positions[]
+  highScores         HighScores[]
 }
 
 model Character {
-  id        Int     @id @default(autoincrement())
+  id        Int         @id
   name      String
-  positionX Int
-  positionY Int
-  puzzle    Puzzle? @relation(fields: [puzzleId], references: [id])
-  puzzleId  Int?
+  positions Positions[]
+}
+
+model Positions {
+  id          Int        @id @default(autoincrement())
+  x           Int
+  y           Int
+  puzzle      Puzzle?    @relation(fields: [puzzleId], references: [id])
+  puzzleId    Int?
+  character   Character? @relation(fields: [characterId], references: [id])
+  characterId Int?
 }
 
 model HighScores {
-  id   Int    @id @default(autoincrement())
-  name String
-  time Int
+  id       Int     @id @default(autoincrement())
+  name     String
+  time     Int
+  puzzle   Puzzle? @relation(fields: [puzzleId], references: [id])
+  puzzleId Int?
 }
