@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "main": "index.js",
   "type": "module",
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
   "scripts": {
     "test": "vitest",
     "dev": "node --env-file=.env --watch src/app.js",
