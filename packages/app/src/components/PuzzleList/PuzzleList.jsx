@@ -1,4 +1,4 @@
-import usePuzzleImage from "../../hooks/usePuzzleImage";
+import usePuzzleImages from "../../hooks/usePuzzleImages";
 import {
   Container,
   List,
@@ -9,7 +9,7 @@ import {
 } from "./PuzzleList.styled";
 
 function PuzzleList() {
-  const { images } = usePuzzleImage();
+  const images = usePuzzleImages();
 
   return (
     <Container>
