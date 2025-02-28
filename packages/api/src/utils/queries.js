@@ -1,11 +1,11 @@
 import prisma from "../config/prismaClient.js";
 
-export const getCharacter = async (puzzleId, characterId) => {
+export const getPosition = async (puzzleId, characterId) => {
   puzzleId = Number(puzzleId);
   characterId = Number(characterId);
 
-  return await prisma.character.findUnique({
-    where: { id: characterId, puzzleId },
+  return await prisma.positions.findUnique({
+    where: { characterId, puzzleId },
   });
 };
 
@@ -21,7 +21,7 @@ export const insertHighScore = async (name, time) => {
   await prisma.highScores.create({ data: { name, time } });
 };
 
-export const getCharactersByPuzzleId = async (puzzleId) => {
+export const getPositionsByPuzzleId = async (puzzleId) => {
   puzzleId = Number(puzzleId);
-  return await prisma.character.findMany({ where: { puzzleId } });
+  return await prisma.positions.findMany({ where: { puzzleId } });
 };
