@@ -41,10 +41,8 @@ export const checkGuessPost = async (req, res, next) => {
 
     const responseData = {
       correct: true,
-      x,
-      y,
+      character: { id: 1, x, y },
       puzzleCompleted: false,
-      foundCharacterIds: foundCharacterIds.map((num) => Number(num)),
     };
 
     if (isArraysMatch(foundCharacterIds, puzzleCharIds, "id")) {
@@ -55,9 +53,10 @@ export const checkGuessPost = async (req, res, next) => {
       const highestScore = _min?.time || null;
 
       responseData.puzzleCompleted = true;
-      responseData.highScore = { time: completionTime };
-      if (completionTime < highestScore || highestScore == null) {
-        responseData.highScore.highestScore = true;
+      responseData.score = { time: completionTime };
+
+      if (completionTime < highestScore || highestScore === null) {
+        responseData.score.highestScore = true;
       }
     }
 
