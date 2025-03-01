@@ -139,11 +139,10 @@ describe("POST /game/check", () => {
     expect(response.statusCode).toBe(200);
     expect(response.body).toEqual({
       token: expect.anything(),
-      ...CHAR_POSITION,
       correct: true,
+      character: { id: 1, ...CHAR_POSITION },
       puzzleCompleted: true,
-      foundCharacterIds: PUZZLE_CHAR_IDS,
-      highScore: { highestScore: true, time: FIVE_MILLISECOND / 1000 },
+      score: { highestScore: true, time: FIVE_MILLISECOND / 1000 },
     });
 
     vi.useRealTimers();
