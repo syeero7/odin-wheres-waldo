@@ -17,12 +17,12 @@ export const startGamePost = async (req, res, next) => {
 };
 
 export const addHighScore = async (req, res) => {
-  const { name, time } = req.body;
+  const { name, time, puzzleId } = req.body;
 
   const trimmedName = name.trim();
   if (trimmedName.length < 3) return res.sendStatus(400);
 
-  await db.insertHighScore(trimmedName, time);
+  await db.insertHighScore(trimmedName, time, puzzleId);
   res.sendStatus(204);
 };
 
@@ -49,7 +49,7 @@ export const checkGuessPost = async (req, res, next) => {
       const startTimestamp = jwtPayload[START_TIMESTAMP];
       const finishTimestamp = Math.floor(Date.now() / 1000);
       const completionTime = finishTimestamp - startTimestamp;
-      const { _min } = await db.getHighestScore();
+      const { _min } = await db.getHighestScore(puzzleId);
       const highestScore = _min?.time || null;
 
       responseData.puzzleCompleted = true;
