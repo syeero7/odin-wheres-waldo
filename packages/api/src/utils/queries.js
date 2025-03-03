@@ -4,7 +4,7 @@ export const getPosition = async (puzzleId, characterId) => {
   puzzleId = Number(puzzleId);
   characterId = Number(characterId);
 
-  return await prisma.positions.findUnique({
+  return await prisma.positions.findFirst({
     where: { characterId, puzzleId },
   });
 };
