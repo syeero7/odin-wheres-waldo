@@ -12,7 +12,7 @@ const positions = [
 
   { characterId: 1, puzzleId: 3, x: 845, y: 227 },
   { characterId: 2, puzzleId: 3, x: 147, y: 209 },
-  { characterId: 3, puzzleId: 3, x: 147, y: 209 },
+  { characterId: 3, puzzleId: 3, x: 370, y: 211 },
 
   { characterId: 1, puzzleId: 4, x: 553, y: 453 },
   { characterId: 2, puzzleId: 4, x: 97, y: 510 },
