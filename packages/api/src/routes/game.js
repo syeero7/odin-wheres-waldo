@@ -4,8 +4,8 @@ import {
   getHighScores,
   addHighScore,
   checkGuessPost,
-} from "../controllers/gameController";
-import { verifyToken } from "../middleware/verifyToken";
+} from "../controllers/gameController.js";
+import { verifyToken } from "../middleware/verifyToken.js";
 
 const router = Router();
 

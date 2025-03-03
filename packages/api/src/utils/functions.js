@@ -1,4 +1,4 @@
-import { COORDINATE_THRESHOLD } from "./constants";
+import { COORDINATE_THRESHOLD } from "./constants.js";
 
 export const isWithinCoordinateThreshold = (x, y, originalX, originalY) => {
   x = Number(x);
