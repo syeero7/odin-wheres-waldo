@@ -41,7 +41,7 @@ export const checkGuessPost = async (req, res, next) => {
 
     const responseData = {
       correct: true,
-      character: { id: 1, x, y },
+      character: { id: characterId, x, y },
       puzzleCompleted: false,
     };
 
