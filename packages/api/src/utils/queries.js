@@ -13,12 +13,20 @@ export const getHighScores = async () => {
   return await prisma.highScores.findMany();
 };
 
-export const getHighestScore = async () => {
-  return await prisma.highScores.aggregate({ _min: { time: true } });
+export const getHighestScore = async (puzzleId) => {
+  return await prisma.highScores.aggregate({
+    _min: { time: true },
+    where: { puzzleId },
+  });
 };
 
-export const insertHighScore = async (name, time) => {
-  await prisma.highScores.create({ data: { name, time } });
+export const insertHighScore = async (name, time, puzzleId) => {
+  puzzleId = Number(puzzleId);
+  time = Number(time);
+
+  await prisma.highScores.create({
+    data: { name, time, puzzle: { connect: { id: puzzleId } } },
+  });
 };
 
 export const getPositionsByPuzzleId = async (puzzleId) => {
