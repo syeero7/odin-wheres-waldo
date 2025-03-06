@@ -52,7 +52,7 @@ export const PuzzleImage = styled.img`
   display: block;
   max-width: 100%;
   height: auto;
-  cursor: url("/src/assets/crosshair.svg"), crosshair;
+  cursor: url("/src/assets/crosshair.svg") 16 16, crosshair;
 `;
 
 export const MarkersContainer = styled.div`
