@@ -56,6 +56,7 @@ export const PuzzleImage = styled.img`
 `;
 
 export const MarkersContainer = styled.div`
+  overflow: hidden;
   position: absolute;
   top: 0;
   left: 0;
