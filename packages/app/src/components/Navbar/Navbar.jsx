@@ -20,7 +20,7 @@ function Navbar() {
         </ListItem>
 
         <ListItem>
-          <CustomNavLink to="/scores">High scores</CustomNavLink>
+          <CustomNavLink to="/high-scores">High scores</CustomNavLink>
         </ListItem>
       </List>
     </Nav>
