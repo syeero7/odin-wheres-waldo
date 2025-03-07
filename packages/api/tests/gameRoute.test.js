@@ -42,14 +42,15 @@ const setupHighScoreTestMocks = (advancedTime, position, puzzleCharIds) => {
 };
 
 describe("GET /game/scores", () => {
+  const puzzleId = 1;
   const highScores = [
-    { id: 1, puzzleId: 1, name: "test1", time: 500 },
-    { id: 2, puzzleId: 1, name: "test2", time: 650 },
+    { id: 1, puzzleId, name: "test1", time: 500 },
+    { id: 2, puzzleId, name: "test2", time: 650 },
   ];
   vi.mocked(db.getHighScores).mockReturnValue(highScores);
 
-  it("should return a list of high scores", async () => {
-    const response = await request(app).get("/game/scores");
+  it("returns a list of high scores for puzzleId 1", async () => {
+    const response = await request(app).get(`/game/scores/${puzzleId}`);
 
     expect(response.statusCode).toBe(200);
     expect(response.body).toEqual({ scores: highScores });
