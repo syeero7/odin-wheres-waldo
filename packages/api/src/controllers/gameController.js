@@ -7,7 +7,9 @@ import {
 } from "../utils/functions.js";
 
 export const getHighScores = async (req, res) => {
-  const scores = await db.getHighScores();
+  const { puzzleId } = req.params;
+
+  const scores = await db.getHighScores(puzzleId);
   res.json({ scores });
 };
 

@@ -9,7 +9,7 @@ import { verifyToken } from "../middleware/verifyToken.js";
 
 const router = Router();
 
-router.get("/scores", getHighScores);
+router.get("/scores/:puzzleId", getHighScores);
 
 router.post("/start", startGamePost);
 router.post("/check", verifyToken, checkGuessPost);
