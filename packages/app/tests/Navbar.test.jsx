@@ -1,60 +1,30 @@
-import { vi, expect, it, describe } from "vitest";
-import { screen, render } from "@testing-library/react";
-import { useLocation, MemoryRouter } from "react-router-dom";
-import Navbar from "../src/components/Navbar";
-
-vi.mock("react-router-dom", async (importOriginal) => {
-  const originalModule = await importOriginal();
-  return { ...originalModule, useLocation: vi.fn() };
-});
-
-const renderComponent = (pathname = "/") => {
-  render(
-    <MemoryRouter initialEntries={[pathname]}>
-      <Navbar />
-    </MemoryRouter>
-  );
-};
-
-const mockUseLocationReturnValue = (currentPath = "", previousPath = null) => {
-  vi.mocked(useLocation).mockReturnValue({
-    pathname: `/${currentPath}`,
-    state: previousPath ? { from: `/${previousPath}` } : null,
-  });
-};
-
-const getLinkElements = () => {
-  const backLink = screen.queryByTestId("back-link");
-  const highScoreLink = screen.queryByRole("link", { name: /score/i });
-  return { backLink, highScoreLink };
-};
+import { expect, it, describe } from "vitest";
+import { renderComponent, getNavigationLinks } from "./test-utils/__Navbar";
 
 describe("Navbar component", () => {
-  it("doesn't render back nav link for pathname: '/'", () => {
-    mockUseLocationReturnValue();
+  it("renders only the high score link on the root route", () => {
     renderComponent();
-    const { backLink, highScoreLink } = getLinkElements();
+    const { backLink, highScoreLink } = getNavigationLinks();
+
     expect(backLink).not.toBeInTheDocument();
     expect(highScoreLink).toBeInTheDocument();
   });
 
-  it("renders both nav links for pathname: '/puzzles/:puzzleId'", () => {
-    const CURRENT_PATHNAME = "puzzles/5";
-    mockUseLocationReturnValue(CURRENT_PATHNAME, "/");
-    renderComponent(CURRENT_PATHNAME);
+  it("renders both back and high score links with correct puzzleId", async () => {
+    renderComponent("/puzzle/5");
+    const { backLink, highScoreLink } = getNavigationLinks();
 
-    const { backLink, highScoreLink } = getLinkElements();
     expect(backLink).toBeInTheDocument();
     expect(highScoreLink).toBeInTheDocument();
+    expect(highScoreLink).toHaveAttribute("href", "/high-scores/5");
   });
 
-  it("doesn't render high scores nav link for pathname: '/scores'", () => {
-    const CURRENT_PATHNAME = "scores";
-    mockUseLocationReturnValue(CURRENT_PATHNAME, "puzzles/5");
-    renderComponent(CURRENT_PATHNAME);
+  it("renders only back link pointing to puzzle page on high scores page", () => {
+    renderComponent("/high-scores/2");
+    const { backLink, highScoreLink } = getNavigationLinks();
 
-    const { backLink, highScoreLink } = getLinkElements();
     expect(backLink).toBeInTheDocument();
+    expect(backLink).toHaveAttribute("href", "/puzzle/2");
     expect(highScoreLink).not.toBeInTheDocument();
   });
 });
