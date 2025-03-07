@@ -51,3 +51,9 @@ export const calculateScore = (seconds) => {
   const score = Math.max(0, maxScore - seconds * penaltyPerSecond);
   return Math.round(score);
 };
+
+export const validatePuzzleId = (puzzleId) => {
+  if (!puzzleId.match(/^[1-5]$/)) {
+    throw new Response("", { status: 404, statusText: "Not Found" });
+  }
+};
