@@ -12,7 +12,7 @@ export const getPosition = async (puzzleId, characterId) => {
 export const getHighScores = async (puzzleId) => {
   puzzleId = Number(puzzleId);
 
-  return await prisma.highScores.findMany({ where: puzzleId });
+  return await prisma.highScores.findMany({ where: { puzzleId } });
 };
 
 export const getHighestScore = async (puzzleId) => {
