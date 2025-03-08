@@ -1,26 +1,27 @@
-import { useLocation } from "react-router-dom";
-import arrowBack from "../../assets/arrow-back.svg";
 import propTypes from "prop-types";
+import { useLocation, useMatch } from "react-router-dom";
+import arrowBack from "../../assets/arrow-back.svg";
 import { Nav, List, ListItem, StyledNavLink } from "./Navbar.styled";
 
-const PUZZLE_PATH_REGEX = new RegExp("^/puzzle/([1-5])$");
-
 function Navbar() {
-  const { state } = useLocation();
-
-  const backLinkPath = state?.from.match(PUZZLE_PATH_REGEX) ? state.from : "/";
+  const { matchedPath, puzzlePath } = useMatchedPuzzlePath();
 
   return (
     <Nav>
       <List>
         <ListItem>
-          <CustomNavLink to={backLinkPath} testid="back-link">
+          <CustomNavLink
+            to={matchedPath === "high-scores" ? `/puzzle${puzzlePath}` : "/"}
+            testid={"back-link"}
+          >
             <img src={arrowBack} alt="back" width="45" height="45" />
           </CustomNavLink>
         </ListItem>
 
         <ListItem>
-          <CustomNavLink to="/high-scores">High scores</CustomNavLink>
+          <CustomNavLink to={`/high-scores${matchedPath ? puzzlePath : ""}`}>
+            High scores
+          </CustomNavLink>
         </ListItem>
       </List>
     </Nav>
@@ -39,6 +40,19 @@ function CustomNavLink({ to, testid = null, children }) {
     </StyledNavLink>
   );
 }
+
+const useMatchedPuzzlePath = () => {
+  const puzzleMatch = useMatch("/puzzle/:puzzleId");
+  const highScoreMatch = useMatch("/high-scores/:puzzleId");
+
+  const { matchedPath, puzzleId } = puzzleMatch
+    ? { matchedPath: "puzzle", puzzleId: puzzleMatch.params.puzzleId }
+    : highScoreMatch
+    ? { matchedPath: "high-scores", puzzleId: highScoreMatch.params.puzzleId }
+    : { matchedPath: null, puzzleId: null };
+
+  return { matchedPath, puzzlePath: `/${puzzleId}` };
+};
 
 CustomNavLink.propTypes = {
   to: propTypes.string.isRequired,
