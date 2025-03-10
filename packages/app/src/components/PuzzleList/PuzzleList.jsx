@@ -14,10 +14,15 @@ function PuzzleList() {
   return (
     <Container>
       <List>
-        {images.map(({ id, src, characters }) => (
+        {images.map(({ id, srcSmall, characters }) => (
           <ListItem key={id}>
             <StyledLink to={`puzzle/${id}`} viewTransition>
-              <Image src={src} alt={`puzzle #${id}`} width="450" />
+              <Image
+                src={srcSmall}
+                alt={`puzzle #${id}`}
+                width="450"
+                height="253"
+              />
               <Characters>
                 {characters.map(({ id, name, src }) => (
                   <img key={id} src={src} alt={name} width="40" height="40" />

@@ -4,6 +4,12 @@ import img3 from "../assets/ww3.webp";
 import img4 from "../assets/ww4.webp";
 import img5 from "../assets/ww5.webp";
 
+import img1Small from "../assets/ww1-small.webp";
+import img2Small from "../assets/ww2-small.webp";
+import img3Small from "../assets/ww3-small.webp";
+import img4Small from "../assets/ww4-small.webp";
+import img5Small from "../assets/ww5-small.webp";
+
 import Waldo from "../assets/Waldo.webp";
 import Odlaw from "../assets/Odlaw.webp";
 import Wizard from "../assets/Whitebeard.webp";
@@ -17,11 +23,13 @@ const imageSrc = [
   {
     id: 1,
     src: img1,
+    srcSmall: img1Small,
     characters: [{ id: 1, src: Waldo }],
   },
   {
     id: 2,
     src: img2,
+    srcSmall: img2Small,
     characters: [
       { id: 1, src: Waldo },
       { id: 2, src: Odlaw },
@@ -31,6 +39,7 @@ const imageSrc = [
   {
     id: 3,
     src: img3,
+    srcSmall: img3Small,
     characters: [
       { id: 1, src: Waldo },
       { id: 2, src: Odlaw },
@@ -40,6 +49,7 @@ const imageSrc = [
   {
     id: 4,
     src: img4,
+    srcSmall: img4Small,
     characters: [
       { id: 1, src: Waldo },
       { id: 2, src: Odlaw },
@@ -50,6 +60,7 @@ const imageSrc = [
   {
     id: 5,
     src: img5,
+    srcSmall: img5Small,
     characters: [
       { id: 1, src: Waldo },
       { id: 2, src: Odlaw },
