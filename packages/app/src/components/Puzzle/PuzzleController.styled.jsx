@@ -135,7 +135,7 @@ export const StartButtonContainer = styled.div`
   min-height: 120px;
   min-width: 200px;
 
-  background-color: hsla(from var(--snow) h s l / 0.3);
+  background-color: var(--snow);
   border-radius: var(--radius);
   box-shadow: 0 0 3px 3px hsla(from var(--black-olive) h s l / 0.5);
 `;
@@ -165,7 +165,7 @@ export const ScoreContainer = styled.div`
   box-shadow: 0 0 3px 3px hsla(from var(--black-olive) h s l / 0.5);
   max-width: 40ch;
   display: grid;
-  background-color: hsla(from var(--snow) h s l / 0.3);
+  background-color: var(--snow);
   border-radius: var(--radius);
   padding: 2em;
   gap: 1em;
