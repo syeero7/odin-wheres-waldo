@@ -23,24 +23,20 @@ export const List = styled.ul`
 `;
 
 export const ListItem = styled.li`
-  & {
-    margin: 0.2em;
-    padding: 0.5em 0.25em;
-    border: 1px solid hsla(from var(--black-olive) h s l / 0.3);
-    box-shadow: hsla(from var(--black-olive) h s l / 0.4) 5px 5px 6px;
-  }
+  margin: 0.2em;
+  border: 1px solid hsla(from var(--black-olive) h s l / 0.3);
+  box-shadow: hsla(from var(--black-olive) h s l / 0.4) 5px 5px 6px;
 
   &:has(> a:hover),
   &:has(> a:active),
   &:has(> a:focus-visible) {
-    border-radius: var(--radius);
-    background-color: var(--black-olive);
+    border-color: transparent;
+    box-shadow: none;
   }
 `;
 
 export const StyledLink = styled(Link)`
   display: inline-block;
-  border-radius: var(--radius);
   transition: transform 0.2s;
 
   &:hover,
@@ -48,15 +44,9 @@ export const StyledLink = styled(Link)`
   &:focus-visible {
     outline: none;
     transform: scale(0.97);
+    box-shadow: 0 0 6px 6px var(--black-olive);
     background-color: var(--snow);
   }
-`;
-
-export const Image = styled.img`
-  min-width: 280px;
-  max-width: 100%;
-  height: auto;
-  border-radius: var(--radius) var(--radius) 0 0;
 `;
 
 export const Characters = styled.div`
