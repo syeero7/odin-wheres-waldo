@@ -4,7 +4,6 @@ import {
   List,
   ListItem,
   StyledLink,
-  Image,
   Characters,
 } from "./PuzzleList.styled";
 
@@ -17,7 +16,7 @@ function PuzzleList() {
         {images.map(({ id, srcSmall, characters }) => (
           <ListItem key={id}>
             <StyledLink to={`puzzle/${id}`} viewTransition>
-              <Image
+              <img
                 src={srcSmall}
                 alt={`puzzle #${id}`}
                 width="450"
