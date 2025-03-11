@@ -3,6 +3,9 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   margin-bottom: 1em;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 
   @media screen and (min-width: 59em) {
     margin: 0.5em 1em;
@@ -33,6 +36,11 @@ export const ListItem = styled.li`
     border-color: transparent;
     box-shadow: none;
   }
+
+  & a > img {
+    max-width: 100%;
+    height: auto;
+  }
 `;
 
 export const StyledLink = styled(Link)`
@@ -56,4 +64,21 @@ export const Characters = styled.div`
   gap: 0.5em;
   background-color: var(--snow);
   border-radius: var(--radius);
+`;
+
+export const Attribution = styled.div`
+  margin-top: auto;
+  min-width: 100%;
+  display: grid;
+  justify-content: space-around;
+  font-family: var(--ff-serif);
+  color: hsla(from var(--black-olive) h s l / 0.9);
+  gap: 0.5em;
+  font-size: 0.9em;
+  padding-top: 0.5em;
+
+  @media screen and (min-width: 28.125em) {
+    grid-auto-flow: column;
+    gap: 1em;
+  }
 `;

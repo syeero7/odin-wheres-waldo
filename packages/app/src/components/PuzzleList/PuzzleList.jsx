@@ -5,6 +5,7 @@ import {
   ListItem,
   StyledLink,
   Characters,
+  Attribution,
 } from "./PuzzleList.styled";
 
 function PuzzleList() {
@@ -31,6 +32,19 @@ function PuzzleList() {
           </ListItem>
         ))}
       </List>
+
+      <Attribution>
+        <p>
+          puzzle images by{" "}
+          <a href="https://wallpaperaccess.com">wallpaperaccess</a>
+        </p>
+        <p>
+          icons by{" "}
+          <a href="https://www.svgrepo.com" target="_blank">
+            SVG Repo
+          </a>
+        </p>
+      </Attribution>
     </Container>
   );
 }
