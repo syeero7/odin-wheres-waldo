@@ -84,8 +84,8 @@ function HighScoreTable({ scores, puzzleId }) {
         {scores.map(({ id, name, time }) => (
           <tr key={id}>
             <td>{name}</td>
-            <td>{time}</td>
             <td>{calculateScore(time)}</td>
+            <td>{time}</td>
           </tr>
         ))}
       </tbody>
