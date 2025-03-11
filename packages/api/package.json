@@ -10,7 +10,7 @@
     "test": "vitest",
     "dev": "node --env-file=.env --watch src/app.js",
     "start": "node src/app.js",
-    "build": "npm install && npx prisma generate && node prisma/migrate.js"
+    "build": "npm install && npx prisma generate && node prisma/migrate.js && node prisma/seed.js"
   },
   "keywords": [],
   "author": "",
