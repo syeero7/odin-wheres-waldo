@@ -1,14 +1,4 @@
-import propTypes from "prop-types";
 import * as styled from "styled-components";
-
-function GlobalStylesProvider({ children }) {
-  return (
-    <>
-      <GlobalStyles />
-      {children}
-    </>
-  );
-}
 
 const gradient = styled.keyframes`
   0% {
@@ -86,8 +76,4 @@ const GlobalStyles = styled.createGlobalStyle`
   }
 `;
 
-GlobalStylesProvider.propTypes = {
-  children: propTypes.element.isRequired,
-};
-
-export default GlobalStylesProvider;
+export default GlobalStyles;

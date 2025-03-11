@@ -8,25 +8,12 @@ import Puzzle, {
 import HighScores, { loader as highScoreLoader } from "./components/HighScores";
 import Fallback from "./components/Fallback/";
 import ErrorPage from "./components/ErrorPage";
-import GlobalStylesProvider from "./GlobalStylesProvider";
 
 const routes = [
   {
-    element: (
-      <GlobalStylesProvider>
-        <App />
-      </GlobalStylesProvider>
-    ),
-    hydrateFallbackElement: (
-      <GlobalStylesProvider>
-        <Fallback />
-      </GlobalStylesProvider>
-    ),
-    errorElement: (
-      <GlobalStylesProvider>
-        <ErrorPage />
-      </GlobalStylesProvider>
-    ),
+    element: <App />,
+    hydrateFallbackElement: <Fallback />,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: "/",
