@@ -1,5 +1,5 @@
 import propTypes from "prop-types";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useFetcher } from "react-router-dom";
 import { usePuzzleContext } from "./PuzzleContext";
 import useOutsideClick from "../../hooks/useOutsideClick";
@@ -67,10 +67,16 @@ function StartPuzzle() {
 }
 
 function PuzzleResult({ isHighestScore, time, onSubmit }) {
-  const inputRef = useRef();
+  const [name, setName] = useState("");
+
+  const handleChange = (e) => {
+    const nonLetterRegex = /[^A-Za-z]/g;
+    const value = e.target.value.replace(nonLetterRegex, "");
+    setName(value);
+  };
 
   const handleSubmit = (e) => {
-    if (!inputRef.current.value.trim()) {
+    if (!name.trim()) {
       e.preventDefault();
       return;
     }
@@ -100,7 +106,8 @@ function PuzzleResult({ isHighestScore, time, onSubmit }) {
           <label>
             <span>Name</span>
             <input
-              ref={inputRef}
+              onChange={handleChange}
+              value={name}
               type="text"
               name="name"
               maxLength="12"
