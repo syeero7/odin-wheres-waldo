@@ -1,10 +1,11 @@
 import propTypes from "prop-types";
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import PuzzleController from "./PuzzleController";
 import usePuzzleImages from "../../hooks/usePuzzleImages";
 import useSessionStorage from "../../hooks/useSessionStorage";
 import useBeforeLeave from "../../hooks/useBeforeLeave";
+import useImageElement from "../../hooks/useImageElement";
 import { PuzzleContext } from "./PuzzleContext";
 import { SESSION_STORAGE_KEY, removeItem } from "../../utils/sessionStorage";
 import {
@@ -32,6 +33,9 @@ function Puzzle() {
   const [feedback, setFeedback] = useState({ msg: "" });
   const [menuPosition, setMenuPosition] = useState({});
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { imageRef, imageElement } = useImageElement(
+    token !== null && foundCharacters.length
+  );
 
   useBeforeLeave(() => {
     removeItem(SESSION_STORAGE_KEY);
@@ -39,11 +43,11 @@ function Puzzle() {
 
   const { puzzleId } = useParams();
   const images = usePuzzleImages();
-  const imgRef = useRef(null);
 
   const handleClick = (e) => {
-    if (!imgRef.current || e.target !== imgRef.current) return;
-    const { rect, scaleX, scaleY } = getImageDimensions(imgRef.current);
+    const image = imageRef.current;
+    if (!image || e.target !== image) return;
+    const { rect, scaleX, scaleY } = getImageDimensions(image);
     const clickCoords = getClickCoordinates(e, rect);
     const originalCoords = getOriginalCoordinates(clickCoords, scaleX, scaleY);
 
@@ -59,9 +63,10 @@ function Puzzle() {
     selectedImage.characters
   );
   const adjustedFoundChars = getAdjustedCharacterCoordinates(
-    imgRef.current,
+    imageElement,
     foundCharacters
   );
+
   const handleIncorrectGuess = () => setFeedback({ msg: "Incorrect" });
   const handleCorrectGuess = (token, character) => {
     const { id, x, y } = character;
@@ -91,7 +96,7 @@ function Puzzle() {
         <CharacterList>
           {characters.map(({ id, src, name, hasFound }) => (
             <Character key={id} style={{ "--opacity": hasFound ? "0.5" : "1" }}>
-              <img src={src} alt={name} />
+              <img src={src} alt={name} width="60" height="60" />
               <figcaption>{name}</figcaption>
             </Character>
           ))}
@@ -105,7 +110,8 @@ function Puzzle() {
           alt="puzzle"
           height="768"
           width="1365"
-          ref={token !== null && imgRef}
+          ref={imageRef}
+          fetchPriority="low"
         />
 
         <MarkersContainer>
