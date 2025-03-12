@@ -70,7 +70,7 @@ describe("Puzzle component", () => {
 
     const { selectCharacter } = await openCharacterMenu();
     await selectCharacter();
-    const marker = screen.getByTestId("marker");
+    const marker = await screen.findByTestId("marker");
 
     expect(marker).toBeInTheDocument();
     expect(getPropertyValue(marker, "left")).toBe(`${CHARACTER_POSITION.x}px`);
