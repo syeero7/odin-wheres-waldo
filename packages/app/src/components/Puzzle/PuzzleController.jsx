@@ -104,6 +104,7 @@ function PuzzleResult({ isHighestScore, time, onSubmit }) {
               type="text"
               name="name"
               maxLength="12"
+              minLength="3"
               required
             />
           </label>
