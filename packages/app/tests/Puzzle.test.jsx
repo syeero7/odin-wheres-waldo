@@ -62,9 +62,9 @@ describe("Puzzle component", () => {
     const CHARACTER_POSITION = { x: 10, y: 34 };
     const actionData = {
       ...TOKEN,
-      correct: true,
+      isCorrect: true,
       character: { id: 1, ...CHARACTER_POSITION },
-      puzzleCompleted: false,
+      isPuzzleCompleted: false,
     };
     renderComponent(actionData);
 
@@ -80,9 +80,9 @@ describe("Puzzle component", () => {
   it("renders result after completing puzzle", async () => {
     const actionData = {
       ...TOKEN,
-      correct: true,
+      isCorrect: true,
       character: { id: 1, x: 1, y: 3 },
-      puzzleCompleted: true,
+      isPuzzleCompleted: true,
       score: { highestScore: true, time: 30 },
     };
     renderComponent(actionData);

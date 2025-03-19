@@ -112,7 +112,7 @@ describe("POST /game/check", () => {
   const token = createToken();
   const data = { x: 1, y: 2, puzzleId: 2, characterId: 1 };
 
-  it("returns correct: false for incorrect guess", async () => {
+  it("returns isCorrect: false for incorrect guess", async () => {
     vi.mocked(db.getPosition).mockReturnValue({ x: 100, y: 200 });
     const response = await request(app)
       .post("/game/check")
@@ -120,7 +120,10 @@ describe("POST /game/check", () => {
       .send(data);
 
     expect(response.statusCode).toBe(200);
-    expect(response.body).toEqual({ correct: false, puzzleCompleted: false });
+    expect(response.body).toEqual({
+      isCorrect: false,
+      isPuzzleCompleted: false,
+    });
   });
 
   it("returns highestScore: true for new high score", async () => {
@@ -140,10 +143,10 @@ describe("POST /game/check", () => {
     expect(response.statusCode).toBe(200);
     expect(response.body).toEqual({
       token: expect.anything(),
-      correct: true,
+      isCorrect: true,
+      isPuzzleCompleted: true,
       character: { id: 1, ...CHAR_POSITION },
-      puzzleCompleted: true,
-      score: { highestScore: true, time: FIVE_MILLISECOND / 1000 },
+      score: { isHighestScore: true, time: FIVE_MILLISECOND / 1000 },
     });
 
     vi.useRealTimers();
