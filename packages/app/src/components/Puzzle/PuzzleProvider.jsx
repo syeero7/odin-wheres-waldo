@@ -18,14 +18,9 @@ function PuzzleProvider({ characters, children }) {
     setItem({ token: state.token }, SESSION_STORAGE_KEY);
   }, [state.token]);
 
-  const foundCharacters = new Set(
-    state.foundCharacters.map((character) => {
-      return [character.id, character];
-    })
-  );
-
+  const foundCharacterIds = new Set(state.foundCharacters.map(({ id }) => id));
   const puzzleCharacters = characters.map((character) => {
-    return { ...character, isFound: foundCharacters.has(character.id) };
+    return { ...character, isFound: foundCharacterIds.has(character.id) };
   });
 
   const value = { ...state, puzzleCharacters };
@@ -70,8 +65,14 @@ const reducer = (state, action) => {
 
     case "process_guess": {
       const { isCorrect, ...payloadData } = action.payload.data;
+      let { wrongGuessCount, correctGuessCount } = { ...state.guesses };
+      isCorrect ? (correctGuessCount += 1) : (wrongGuessCount += 1);
       const defaultUpdates = {
-        isGuessCorrect: isCorrect,
+        guesses: {
+          wrongGuessCount,
+          correctGuessCount,
+          isLastGuessCorrect: isCorrect,
+        },
         characterSelector: { ...state.characterSelector, isOpen: false },
       };
       const correctGuessUpdates = isCorrect
@@ -95,7 +96,11 @@ const reducer = (state, action) => {
 const storageItem = getItem(SESSION_STORAGE_KEY) || {};
 const initialState = {
   token: storageItem.token,
-  isGuessCorrect: false,
+  guesses: {
+    wrongGuessCount: 0,
+    correctGuessCount: 0,
+    isLastGuessCorrect: null,
+  },
   targetPosition: { x: null, y: null },
   foundCharacters: [],
   characterSelector: {
