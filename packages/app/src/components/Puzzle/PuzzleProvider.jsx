@@ -15,7 +15,7 @@ function PuzzleProvider({ characters, children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    setItem(state.token, SESSION_STORAGE_KEY);
+    setItem({ token: state.token }, SESSION_STORAGE_KEY);
   }, [state.token]);
 
   const foundCharacters = new Set(
@@ -92,8 +92,9 @@ const reducer = (state, action) => {
   }
 };
 
+const storageItem = getItem(SESSION_STORAGE_KEY) || {};
 const initialState = {
-  token: getItem(SESSION_STORAGE_KEY),
+  token: storageItem.token,
   isGuessCorrect: false,
   targetPosition: { x: null, y: null },
   foundCharacters: [],
