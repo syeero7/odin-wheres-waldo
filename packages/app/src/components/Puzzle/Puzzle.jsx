@@ -33,10 +33,10 @@ function Puzzle() {
   const selectedImage = images.find((img) => img.id === Number(puzzleId));
 
   return (
-    <PuzzleProvider>
+    <PuzzleProvider characters={selectedImage.characters}>
       <Container>
         <header>
-          <PuzzleCharacters characters={selectedImage.characters} />
+          <PuzzleCharacters />
           <FeedbackMessage />
         </header>
 
@@ -77,18 +77,13 @@ function PuzzleImage({ src, ref, children }) {
   );
 }
 
-function PuzzleCharacters({ characters }) {
-  const { foundCharacters } = usePuzzleState();
-
-  const foundChars = foundCharacters.reduce((obj, character) => {
-    obj[character.id] = true;
-    return obj;
-  }, {});
+function PuzzleCharacters() {
+  const { puzzleCharacters } = usePuzzleState();
 
   return (
     <CharacterList>
-      {characters.map(({ id, src, name }) => {
-        const opacity = { "--opacity": foundChars[id] ? "0.5" : "1" };
+      {puzzleCharacters.map(({ id, src, name, isFound }) => {
+        const opacity = { "--opacity": isFound ? "0.5" : "1" };
 
         return (
           <Character key={id} style={opacity}>
@@ -164,10 +159,6 @@ PuzzleImage.propTypes = {
     propTypes.arrayOf(propTypes.node).isRequired,
     propTypes.node.isRequired,
   ]).isRequired,
-};
-
-PuzzleCharacters.propTypes = {
-  characters: propTypes.arrayOf(propTypes.object.isRequired).isRequired,
 };
 
 FoundCharacterMarkers.propTypes = {
