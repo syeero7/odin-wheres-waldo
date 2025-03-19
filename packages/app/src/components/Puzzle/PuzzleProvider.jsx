@@ -11,15 +11,27 @@ import {
   getOriginalCoordinates,
 } from "../../utils/puzzleUtils";
 
-function PuzzleProvider({ children }) {
+function PuzzleProvider({ characters, children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
     setItem(state.token, SESSION_STORAGE_KEY);
   }, [state.token]);
 
+  const foundCharacters = new Set(
+    state.foundCharacters.map((character) => {
+      return [character.id, character];
+    })
+  );
+
+  const puzzleCharacters = characters.map((character) => {
+    return { ...character, isFound: foundCharacters.has(character.id) };
+  });
+
+  const value = { ...state, puzzleCharacters };
+
   return (
-    <PuzzleContext value={state}>
+    <PuzzleContext value={value}>
       <PuzzleDispatchContext value={dispatch}>{children}</PuzzleDispatchContext>
     </PuzzleContext>
   );
@@ -91,13 +103,14 @@ const initialState = {
   },
 };
 
-const PuzzleContext = createContext(initialState);
-const PuzzleDispatchContext = createContext(null);
+const PuzzleContext = createContext({ ...initialState, puzzleCharacters: [] });
+const PuzzleDispatchContext = createContext(() => {});
 
 const usePuzzleState = () => use(PuzzleContext);
 const usePuzzleDispatch = () => use(PuzzleDispatchContext);
 
 PuzzleProvider.propTypes = {
+  characters: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node).isRequired,
     PropTypes.node.isRequired,
