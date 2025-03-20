@@ -1,72 +1,173 @@
 import propTypes from "prop-types";
 import { useState } from "react";
-import { useFetcher } from "react-router-dom";
-import { usePuzzleContext } from "./PuzzleContext";
+import { useFormStatus } from "react-dom";
+import { useParams } from "react-router-dom";
+import { usePuzzleDispatch, usePuzzleState } from "./PuzzleProvider";
 import useOutsideClick from "../../hooks/useOutsideClick";
-import useOnFetcherDataChange from "../../hooks/useOnFetcherDataChange";
+import { calculateScore } from "../../utils/puzzleUtils";
+import { checkCharacterPosition, startPuzzle } from "../../utils/api";
 import {
   Menu,
   Backdrop,
   Button,
   Spinner,
-  HighScoreForm,
-  ScoreContainer,
   Score,
+  ScoreContainer,
   StartButtonContainer,
+  HighScoreForm as ScoreForm,
 } from "./PuzzleController.styled";
-import { calculateScore } from "../../utils/puzzleUtils";
 
 function PuzzleController() {
-  const { token, menu } = usePuzzleContext();
+  const { token, characterSelector } = usePuzzleState();
   const [result, setResult] = useState(null);
 
-  if (token && menu.isOpen) {
-    return <CharacterMenu onFinished={(value) => setResult(value)} />;
-  }
+  const component =
+    token && characterSelector.isOpen
+      ? "character-selector"
+      : !token
+      ? "start-puzzle"
+      : result
+      ? "puzzle-result"
+      : null;
 
-  if (!token) {
-    return (
-      <Backdrop>
-        <StartPuzzle />
-      </Backdrop>
-    );
-  }
+  switch (component) {
+    case "character-selector": {
+      return <CharacterSelector onComplete={(value) => setResult(value)} />;
+    }
 
-  if (result) {
-    return (
-      <Backdrop>
-        <PuzzleResult
-          isHighestScore={result.highestScore}
-          time={result.time}
-          onSubmit={() => setResult(null)}
-        />
-      </Backdrop>
-    );
+    case "start-puzzle": {
+      return (
+        <Backdrop>
+          <StartPuzzle />
+        </Backdrop>
+      );
+    }
+
+    case "puzzle-result": {
+      return (
+        <Backdrop>
+          <PuzzleResult result={result} onSubmit={() => setResult(null)} />
+        </Backdrop>
+      );
+    }
   }
 }
 
 function StartPuzzle() {
-  const { onStart } = usePuzzleContext();
-  const fetcher = useFetcher();
+  const dispatch = usePuzzleDispatch();
 
-  useOnFetcherDataChange(() => {
-    if (fetcher.data?.token) onStart(fetcher.data.token);
-  }, fetcher.data);
+  // eslint-disable-next-line no-unused-vars
+  const formAction = async (formData) => {
+    const response = await startPuzzle();
+    const data = await response.json();
+
+    dispatch({ type: "start_puzzle", payload: { data } });
+  };
 
   return (
-    <fetcher.Form action="start" method="post">
+    <form action={formAction}>
       <StartButtonContainer>
-        {fetcher.state !== "idle" ? (
-          <Spinner />
-        ) : (
-          <Button type="submit">Start</Button>
-        )}
+        <FormStatus>
+          {({ pending }) =>
+            pending ? <Spinner /> : <Button type="submit">Start</Button>
+          }
+        </FormStatus>
       </StartButtonContainer>
-    </fetcher.Form>
+    </form>
   );
 }
 
-function PuzzleResult({ isHighestScore, time, onSubmit }) {
+function PuzzleResult({ result, onSubmit }) {
+  const { time, isHighestScore } = result;
+
+  return (
+    <ScoreContainer>
+      <PlayerScore time={time} isHighestScore={isHighestScore} />
+      {isHighestScore && <HighScoreForm time={time} onSubmit={onSubmit} />}
+    </ScoreContainer>
+  );
+}
+
+function CharacterSelector({ onComplete }) {
+  const { puzzleId } = useParams();
+  const { targetPosition, characterSelector } = usePuzzleState();
+  const dispatch = usePuzzleDispatch();
+
+  const closeSelector = () => dispatch({ type: "close_selector" });
+  const selectorRef = useOutsideClick(closeSelector);
+
+  const formAction = async (formData) => {
+    const body = Object.fromEntries(formData);
+    const response = await checkCharacterPosition({ ...body, puzzleId });
+    const data = await response.json();
+
+    if (data.isPuzzleCompleted) onComplete(data.score);
+    dispatch({ type: "process_guess", payload: { data } });
+  };
+
+  const styles = {
+    "--menu-left": `${characterSelector.position.x}px`,
+    "--menu-top": `${characterSelector.position.y}px`,
+  };
+
+  return (
+    <Menu ref={selectorRef} style={styles}>
+      <form action={formAction}>
+        <button type="button" aria-label="close" onClick={closeSelector}>
+          ❌
+        </button>
+        <input type="hidden" name="x" value={targetPosition.x} />
+        <input type="hidden" name="y" value={targetPosition.y} />
+        <CharacterSelectorButtons />
+      </form>
+    </Menu>
+  );
+}
+
+function CharacterSelectorButtons() {
+  const { puzzleCharacters } = usePuzzleState();
+
+  return (
+    <FormStatus>
+      {({ pending }) => (
+        <>
+          {puzzleCharacters.map(({ id, name, isFound }) => (
+            <button
+              key={id}
+              value={id}
+              name="characterId"
+              disabled={pending || isFound}
+            >
+              {name}
+            </button>
+          ))}
+        </>
+      )}
+    </FormStatus>
+  );
+}
+
+function PlayerScore({ time, isHighestScore }) {
+  const score = calculateScore(time);
+
+  return (
+    <Score>
+      <p>
+        {isHighestScore ? "🏆 Highest Score: " : "Score: "}
+        {score}
+      </p>
+      <p>Time Taken: {time} seconds</p>
+      {isHighestScore && (
+        <p>
+          🎉 Congratulations! You set a new high score! Enter your name below to
+          join the leaderboard.
+        </p>
+      )}
+    </Score>
+  );
+}
+
+function HighScoreForm({ time, onSubmit }) {
   const [name, setName] = useState("");
 
   const handleChange = (e) => {
@@ -83,96 +184,64 @@ function PuzzleResult({ isHighestScore, time, onSubmit }) {
     onSubmit();
   };
 
-  const score = calculateScore(time);
-
   return (
-    <ScoreContainer>
-      <Score>
-        <p>
-          {isHighestScore ? "🏆 Highest Score: " : "Score: "}
-          {score}
-        </p>
-        <p>Time Taken: {time} seconds</p>
-        {isHighestScore && (
-          <p>
-            🎉 Congratulations! You set a new high score! Enter your name below
-            to join the leaderboard.
-          </p>
+    <ScoreForm
+      action="save"
+      method="post"
+      onSubmit={handleSubmit}
+      viewTransition
+    >
+      <input type="hidden" name="time" value={time} />
+      <label>
+        <span>Name</span>
+        <input
+          onChange={handleChange}
+          value={name}
+          type="text"
+          name="name"
+          maxLength="12"
+          minLength="3"
+          required
+        />
+      </label>
+
+      <FormStatus>
+        {({ pending }) => (
+          <Button disabled={pending} type="submit">
+            Save
+          </Button>
         )}
-      </Score>
-      {isHighestScore && (
-        <HighScoreForm action="save" method="post" onSubmit={handleSubmit}>
-          <input type="hidden" name="time" value={time} />
-          <label>
-            <span>Name</span>
-            <input
-              onChange={handleChange}
-              value={name}
-              type="text"
-              name="name"
-              maxLength="12"
-              minLength="3"
-              required
-            />
-          </label>
-          <Button type="submit">Save</Button>
-        </HighScoreForm>
-      )}
-    </ScoreContainer>
+      </FormStatus>
+    </ScoreForm>
   );
 }
 
-function CharacterMenu({ onFinished }) {
-  const { menu, targetPosition, onCorrectGuess, onIncorrectGuess } =
-    usePuzzleContext();
-  const menuRef = useOutsideClick(menu.close);
-  const fetcher = useFetcher();
-
-  useOnFetcherDataChange(() => {
-    if (fetcher.data.correct) {
-      const { token, character, puzzleCompleted } = fetcher.data;
-
-      onCorrectGuess(token, character);
-      if (puzzleCompleted) {
-        onFinished({ highestScore: false, ...fetcher.data.score });
-      }
-    } else {
-      onIncorrectGuess();
-    }
-    menu.close();
-  }, fetcher.data);
-
-  const style = {
-    "--menu-left": `${menu.position.x}px`,
-    "--menu-top": `${menu.position.y}px`,
-  };
-
-  return (
-    <Menu ref={menuRef} style={style}>
-      <fetcher.Form method="post" action="check">
-        <button type="button" aria-label="close" onClick={menu.close}>
-          ❌
-        </button>
-        <input type="hidden" name="x" value={targetPosition.x} />
-        <input type="hidden" name="y" value={targetPosition.y} />
-        {menu.characters.map(({ id, name, hasFound }) => (
-          <button key={id} name="characterId" value={id} disabled={hasFound}>
-            {name}
-          </button>
-        ))}
-      </fetcher.Form>
-    </Menu>
-  );
+function FormStatus({ children }) {
+  const status = useFormStatus();
+  return <>{children(status)}</>;
 }
 
 PuzzleResult.propTypes = {
+  result: propTypes.object.isRequired,
+  onSubmit: propTypes.func.isRequired,
+};
+
+CharacterSelector.propTypes = {
+  onComplete: propTypes.func.isRequired,
+};
+
+PlayerScore.propTypes = {
   isHighestScore: propTypes.bool.isRequired,
+  time: propTypes.number.isRequired,
+};
+
+HighScoreForm.propTypes = {
   time: propTypes.number.isRequired,
   onSubmit: propTypes.func.isRequired,
 };
 
-CharacterMenu.propTypes = {
-  onFinished: propTypes.func.isRequired,
+FormStatus.propTypes = {
+  children: propTypes.func.isRequired,
 };
 
 export default PuzzleController;
