@@ -1,3 +1,3 @@
 export { default } from "./Puzzle";
-export * as actions from "./actions";
+export { saveHighScore } from "./action";
 export { loader } from "./loader";
