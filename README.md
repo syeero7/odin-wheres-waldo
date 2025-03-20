@@ -1,6 +1,6 @@
 # Where's Waldo?
 
-This is a basic implementation of [where's waldo](https://en.wikipedia.org/wiki/Where's_Wally%3F) built using React.The objective of the game is to locate Waldo and other characters within a given scene.
+This is a basic implementation of [where's waldo](https://en.wikipedia.org/wiki/Where's_Wally%3F) built using Express & React.The objective of the game is to locate Waldo and other characters within a given scene.
 
 [Live site](https://how-is-waldo.netlify.app/)
 
