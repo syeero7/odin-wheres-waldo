@@ -1,10 +1,6 @@
 import { createContext, use, useEffect, useReducer } from "react";
 import PropTypes from "prop-types";
-import {
-  getItem,
-  setItem,
-  SESSION_STORAGE_KEY,
-} from "../../utils/sessionStorage";
+import { setItem, SESSION_STORAGE_KEY } from "../../utils/sessionStorage";
 import {
   getClickCoordinates,
   getImageDimensions,
@@ -93,9 +89,8 @@ const reducer = (state, action) => {
   }
 };
 
-const storageItem = getItem(SESSION_STORAGE_KEY) || {};
 const initialState = {
-  token: storageItem.token,
+  token: "",
   guesses: {
     wrongGuessCount: 0,
     correctGuessCount: 0,
