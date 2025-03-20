@@ -1,4 +1,4 @@
-import { expect, it, describe, beforeEach, afterEach } from "vitest";
+import { expect, it, describe, beforeEach, afterEach, vi } from "vitest";
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
@@ -10,28 +10,26 @@ import {
   getPropertyValue,
   openCharacterMenu,
   getPreparedPuzzleImg,
+  mockFetchResolvedValue,
+  startPuzzle,
 } from "./test-utils/__Puzzle";
 
 initializeMocks();
 
 describe("Puzzle component", () => {
-  let testCount = 0;
-
   beforeEach(() => {
-    testCount++;
-    if (testCount > 1) {
-      window.sessionStorage.setItem("Token", JSON.stringify(TOKEN));
-    }
+    window.sessionStorage.setItem("Token", JSON.stringify(TOKEN));
   });
 
   afterEach(() => {
     window.sessionStorage.clear();
+    vi.unstubAllGlobals();
   });
 
   it("removes start button when clicked", async () => {
-    renderComponent(TOKEN, true);
-
     const user = userEvent.setup();
+    mockFetchResolvedValue(TOKEN);
+    renderComponent();
     const button = screen.queryByRole("button", { name: /start/i });
 
     expect(button).toBeInTheDocument();
@@ -49,9 +47,11 @@ describe("Puzzle component", () => {
   });
 
   it("renders the character selection menu after clicking on the puzzle image", async () => {
+    const user = userEvent.setup();
+    mockFetchResolvedValue(TOKEN);
     renderComponent();
-
-    await openCharacterMenu();
+    await startPuzzle(user);
+    await openCharacterMenu(user);
 
     SELECTED_PUZZLE.characters.forEach(({ name }) => {
       expect(screen.getByRole("button", { name })).toBeInTheDocument();
@@ -60,15 +60,17 @@ describe("Puzzle component", () => {
 
   it("renders a marker at the correct position after locating a character", async () => {
     const CHARACTER_POSITION = { x: 10, y: 34 };
-    const actionData = {
+    const mockData = {
       ...TOKEN,
       isCorrect: true,
       character: { id: 1, ...CHARACTER_POSITION },
       isPuzzleCompleted: false,
     };
-    renderComponent(actionData);
-
-    const { selectCharacter } = await openCharacterMenu();
+    const user = userEvent.setup();
+    mockFetchResolvedValue(mockData);
+    renderComponent();
+    await startPuzzle(user);
+    const { selectCharacter } = await openCharacterMenu(user);
     await selectCharacter();
     const marker = await screen.findByTestId("marker");
 
@@ -78,16 +80,18 @@ describe("Puzzle component", () => {
   });
 
   it("renders result after completing puzzle", async () => {
-    const actionData = {
+    const mockData = {
       ...TOKEN,
       isCorrect: true,
       character: { id: 1, x: 1, y: 3 },
       isPuzzleCompleted: true,
-      score: { highestScore: true, time: 30 },
+      score: { isHighestScore: true, time: 30 },
     };
-    renderComponent(actionData);
-
-    const { selectCharacter } = await openCharacterMenu();
+    const user = userEvent.setup();
+    mockFetchResolvedValue(mockData);
+    renderComponent();
+    await startPuzzle(user);
+    const { selectCharacter } = await openCharacterMenu(user);
     await selectCharacter();
 
     expect(screen.getByText(/30/)).toBeInTheDocument();

@@ -1,6 +1,5 @@
 import { vi } from "vitest";
 import { screen, render } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { createRoutesStub } from "react-router-dom";
 
 import Puzzle from "../../src/components/Puzzle";
@@ -12,34 +11,36 @@ export const initializeMocks = () => {
   vi.mocked(usePuzzleImages).mockReturnValue(images);
 };
 
+export const mockFetchResolvedValue = (value) => {
+  const mockRes = {
+    ok: true,
+    json: async () => {
+      return value;
+    },
+  };
+
+  vi.stubGlobal("fetch", vi.fn().mockResolvedValue(mockRes));
+};
+
 const PUZZLE_ID = 3;
 const PUZZLE_IMAGE_SIZE = { width: 1365, height: 768 };
 export const TOKEN = { token: "token" };
 export const SELECTED_PUZZLE = images.find((img) => img.id === PUZZLE_ID);
 
-export const renderComponent = (action = null, isStartAction = false) => {
+export const renderComponent = () => {
   const Stub = createRoutesStub([
     {
       path: "puzzle/:puzzleId",
       Component: Puzzle,
-      children: [
-        {
-          path: "check",
-          action() {
-            return isStartAction ? null : action;
-          },
-        },
-        {
-          path: "start",
-          action() {
-            return isStartAction ? action : null;
-          },
-        },
-      ],
     },
   ]);
 
   render(<Stub initialEntries={[`/puzzle/${PUZZLE_ID}`]} />);
+};
+
+export const startPuzzle = async (user) => {
+  const button = screen.queryByRole("button", { name: /start/i });
+  await user.click(button);
 };
 
 export const getPreparedPuzzleImg = () => {
@@ -55,8 +56,7 @@ export const getPreparedPuzzleImg = () => {
   return image;
 };
 
-export const openCharacterMenu = async () => {
-  const user = userEvent.setup();
+export const openCharacterMenu = async (user) => {
   await user.click(getPreparedPuzzleImg());
   const selectCharacter = async () => {
     await user.click(screen.getByRole("button", { name: /waldo/i }));
