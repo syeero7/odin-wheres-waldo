@@ -1,10 +1,7 @@
 import { sendResponseWithToken } from "../middleware/sendResponseWithToken.js";
 import * as db from "../utils/queries.js";
 import { JWT_KEYS } from "../utils/constants.js";
-import {
-  isArraysMatch,
-  isWithinCoordinateThreshold,
-} from "../utils/functions.js";
+import { createGuessResponse } from "../utils/createGuessResponse.js";
 
 export const getHighScores = async (req, res) => {
   const { puzzleId } = req.params;
@@ -30,44 +27,14 @@ export const addHighScore = async (req, res) => {
 
 export const checkGuessPost = async (req, res, next) => {
   const { body, jwtPayload } = req;
-  const { characterId, x: guessX, y: guessY, puzzleId } = body;
-  const { x, y } = await db.getPosition(puzzleId, characterId);
+  const response = await createGuessResponse(body, jwtPayload);
+  const { data, payload, guessState } = response;
 
-  if (isWithinCoordinateThreshold(guessX, guessY, x, y)) {
-    const { FOUND_CHARACTER_IDS, START_TIMESTAMP } = JWT_KEYS;
-    const payloadCharacterIds =
-      jwtPayload[FOUND_CHARACTER_IDS]?.split(",") || [];
-    const foundCharacterIds = [characterId, ...payloadCharacterIds];
-    const charPositions = await db.getPositionsByPuzzleId(puzzleId);
-    const puzzleCharIds = charPositions.map(({ characterId: id }) => ({ id }));
+  switch (guessState) {
+    case "correct":
+      return await sendResponseWithToken(res, next, payload, data);
 
-    const responseData = {
-      correct: true,
-      character: { id: characterId, x, y },
-      puzzleCompleted: false,
-    };
-
-    if (isArraysMatch(foundCharacterIds, puzzleCharIds, "id")) {
-      const startTimestamp = jwtPayload[START_TIMESTAMP];
-      const finishTimestamp = Math.floor(Date.now() / 1000);
-      const completionTime = finishTimestamp - startTimestamp;
-      const { _min } = await db.getHighestScore(puzzleId);
-      const highestScore = _min?.time || null;
-
-      responseData.puzzleCompleted = true;
-      responseData.score = { time: completionTime };
-
-      if (completionTime < highestScore || highestScore === null) {
-        responseData.score.highestScore = true;
-      }
-    }
-
-    const payload = {
-      ...jwtPayload,
-      [FOUND_CHARACTER_IDS]: foundCharacterIds.join(","),
-    };
-    return await sendResponseWithToken(res, next, payload, responseData);
+    case "wrong":
+      return res.json(data);
   }
-
-  res.json({ correct: false, puzzleCompleted: false });
 };
