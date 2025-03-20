@@ -2,7 +2,7 @@ import { Navigate } from "react-router-dom";
 import App from "./App";
 import PuzzleList from "./components/PuzzleList";
 import Puzzle, {
-  actions as puzzleActions,
+  saveHighScore,
   loader as puzzleLoader,
 } from "./components/Puzzle";
 import HighScores, { loader as highScoreLoader } from "./components/HighScores";
@@ -23,11 +23,7 @@ const routes = [
         path: "puzzle/:puzzleId",
         element: <Puzzle />,
         loader: puzzleLoader,
-        children: [
-          { path: "start", action: puzzleActions.start },
-          { path: "check", action: puzzleActions.check },
-          { path: "save", action: puzzleActions.save },
-        ],
+        children: [{ path: "save", action: saveHighScore }],
       },
       {
         path: "high-scores",
