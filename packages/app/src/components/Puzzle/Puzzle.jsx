@@ -97,24 +97,16 @@ function PuzzleCharacters() {
 }
 
 function FeedbackMessage() {
-  const { isGuessCorrect, foundCharacters } = usePuzzleState();
-  const [showMessage, setShowMessage] = useState(true);
+  const { guesses } = usePuzzleState();
+  const { wrongGuessCount, correctGuessCount, isLastGuessCorrect } = guesses;
+  const isVisible = useMessageVisibility(correctGuessCount, wrongGuessCount);
 
-  useEffect(() => {
-    setShowMessage(true);
-    const timer = setTimeout(() => {
-      setShowMessage(false);
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, [isGuessCorrect]);
-
-  const message = isGuessCorrect ? "Correct" : "Wrong";
-  const variable = isGuessCorrect ? "--green" : "--red";
+  const message = isLastGuessCorrect ? "Correct" : "Wrong";
+  const variable = isLastGuessCorrect ? "--green" : "--red";
 
   return (
     <Output style={{ "--output": `var(${variable})` }}>
-      {showMessage && foundCharacters.length ? message : ""}
+      {isVisible ? message : ""}
     </Output>
   );
 }
@@ -136,6 +128,23 @@ function FoundCharacterMarkers({ imageRef }) {
     </MarkersContainer>
   );
 }
+
+const useMessageVisibility = (correctGuessCount, wrongGuessCount) => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    if (wrongGuessCount === 0 && correctGuessCount === 0) return;
+
+    setIsVisible(true);
+    const timer = setTimeout(() => {
+      setIsVisible(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [correctGuessCount, wrongGuessCount]);
+
+  return isVisible;
+};
 
 const useAdjustedFoundCharacters = (imageRef) => {
   const [adjustedCharacters, setAdjustedCharacters] = useState([]);
