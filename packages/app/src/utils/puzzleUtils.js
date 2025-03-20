@@ -37,14 +37,6 @@ export const getAdjustedCharacterCoordinates = (element, characters) => {
   });
 };
 
-export const addFoundStatusToPuzzleCharacters = (foundChars, puzzleChars) => {
-  const foundCharIds = new Set(foundChars.map(({ id }) => id));
-
-  return puzzleChars.map((char) => {
-    return { ...char, hasFound: foundCharIds.has(char.id) };
-  });
-};
-
 export const calculateScore = (seconds) => {
   const maxScore = 1000; // highest possible score (1 second)
   const penaltyPerSecond = 2;
