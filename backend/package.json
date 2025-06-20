@@ -1,0 +1,35 @@
+{
+  "name": "@waldo/backend",
+  "version": "0.0.0",
+  "main": "index.js",
+  "type": "module",
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
+  "scripts": {
+    "test": "vitest",
+    "dev": "node --env-file=.env --watch src/server.js",
+    "start": "node src/server.js",
+    "build": "npm install && npx prisma generate && npx prisma migrate deploy && node prisma/seed.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@prisma/client": "^6.10.1",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "express-async-handler": "^1.2.0",
+    "express-validator": "^7.2.1",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.20.0",
+    "eslint": "^9.29.0",
+    "globals": "^15.15.0",
+    "prisma": "^6.10.1",
+    "supertest": "^7.1.1",
+    "vitest": "^3.2.4"
+  }
+}

@@ -4,22 +4,22 @@
   "main": "index.js",
   "private": true,
   "scripts": {
-    "dev:api": "npm run dev -w @packages/api",
-    "test:api": "npm test -w @packages/api",
-    "start:api": "npm start -w @packages/api",
-    "build:api": "npm run build -w @packages/api",
-    "dev:app": "npm run dev -w @packages/app",
-    "test:app": "npm test -w @packages/app",
-    "start:app": "npm start -w @packages/app",
-    "build:app": "npm run build -w @packages/app",
-    "preview": "npm run preview -w @packages/app"
+    "dev:backend": "npm run dev -w @waldo/backend",
+    "test:backend": "npm test -w @waldo/backend",
+    "start:backend": "npm start -w @waldo/backend",
+    "build:backend": "npm run build -w @waldo/backend",
+    "dev:frontend": "npm run dev -w @waldo/frontend",
+    "test:frontend": "npm test -w @waldo/frontend",
+    "start:frontend": "npm start -w @waldo/frontend",
+    "build:frontend": "npm run build -w @waldo/frontend",
+    "preview": "npm run preview -w @waldo/frontend"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "workspaces": [
-    "packages/api",
-    "packages/app"
+    "frontend",
+    "backend"
   ]
 }
