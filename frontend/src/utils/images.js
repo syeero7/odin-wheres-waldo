@@ -15,7 +15,7 @@ import Odlaw from "../assets/Odlaw.webp";
 import Wizard from "../assets/Whitebeard.webp";
 import Wenda from "../assets/Wenda.webp";
 
-import { data } from "../../../characterData.json";
+import { data } from "../../../character-data.json";
 
 export const PUZZLE_COUNT = data.length;
 

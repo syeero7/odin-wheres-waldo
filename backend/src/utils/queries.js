@@ -1,23 +1,16 @@
-import prisma from "../config/prismaClient.js";
+import prisma from "../prisma-client.js";
 
 export const getPosition = async (puzzleId, characterId) => {
-  puzzleId = Number(puzzleId);
-  characterId = Number(characterId);
-
   return await prisma.positions.findFirst({
     where: { characterId, puzzleId },
   });
 };
 
 export const getHighScores = async (puzzleId) => {
-  puzzleId = Number(puzzleId);
-
   return await prisma.highScores.findMany({ where: { puzzleId } });
 };
 
 export const getHighestScore = async (puzzleId) => {
-  puzzleId = Number(puzzleId);
-
   return await prisma.highScores.aggregate({
     _min: { time: true },
     where: { puzzleId },
@@ -25,16 +18,11 @@ export const getHighestScore = async (puzzleId) => {
 };
 
 export const insertHighScore = async (name, time, puzzleId) => {
-  puzzleId = Number(puzzleId);
-  time = Number(time);
-
   await prisma.highScores.create({
     data: { name, time, puzzle: { connect: { id: puzzleId } } },
   });
 };
 
 export const getPositionsByPuzzleId = async (puzzleId) => {
-  puzzleId = Number(puzzleId);
-
   return await prisma.positions.findMany({ where: { puzzleId } });
 };
