@@ -8,7 +8,7 @@ import {
   afterEach,
 } from "vitest";
 import request from "supertest";
-import app from "./__app.js";
+import server from "./__server.js";
 import * as db from "../src/utils/queries.js";
 import { JWT_KEYS } from "../src/utils/constants.js";
 import jwt from "jsonwebtoken";
@@ -50,7 +50,7 @@ describe("GET /game/scores", () => {
   vi.mocked(db.getHighScores).mockReturnValue(highScores);
 
   it("returns a list of high scores for puzzleId 1", async () => {
-    const response = await request(app).get(`/game/scores/${puzzleId}`);
+    const response = await request(server).get(`/game/scores/${puzzleId}`);
 
     expect(response.statusCode).toBe(200);
     expect(response.body).toEqual({ scores: highScores });
@@ -59,7 +59,7 @@ describe("GET /game/scores", () => {
 
 describe("POST /game/start", () => {
   it("generates and returns token", async () => {
-    const response = await request(app).post("/game/start");
+    const response = await request(server).post("/game/start");
 
     expect(response.statusCode).toBe(200);
     expect(response.body).toEqual({ token: expect.anything() });
@@ -70,11 +70,11 @@ describe("POST /game/scores", () => {
   afterEach(() => {
     vi.mocked(db.insertHighScore).mockClear();
   });
-  const data = { time: 700, name: "test" };
+  const data = { time: 700, name: "test", puzzleId: 1 };
   const token = createToken();
 
   it("inserts data and returns 204", async () => {
-    const response = await request(app)
+    const response = await request(server)
       .post("/game/scores")
       .set("Authorization", `Bearer ${token}`)
       .send(data);
@@ -84,7 +84,7 @@ describe("POST /game/scores", () => {
   });
 
   it("returns 400 and prevents data insertion for invalid request", async () => {
-    const response = await request(app)
+    const response = await request(server)
       .post("/game/scores")
       .set("Authorization", `Bearer ${token}`)
       .send({ ...data, name: "" });
@@ -94,13 +94,13 @@ describe("POST /game/scores", () => {
   });
 
   it("returns 401 for missing token", async () => {
-    const response = await request(app).post("/game/scores");
+    const response = await request(server).post("/game/scores");
 
     expect(response.statusCode).toBe(401);
   });
 
   it("returns 403 for invalid token", async () => {
-    const response = await request(app)
+    const response = await request(server)
       .post("/game/scores")
       .set("Authorization", `Bearer ${token}x`);
 
@@ -114,7 +114,7 @@ describe("POST /game/check", () => {
 
   it("returns isCorrect: false for incorrect guess", async () => {
     vi.mocked(db.getPosition).mockReturnValue({ x: 100, y: 200 });
-    const response = await request(app)
+    const response = await request(server)
       .post("/game/check")
       .set("Authorization", `Bearer ${token}`)
       .send(data);
@@ -135,7 +135,7 @@ describe("POST /game/check", () => {
     vi.advanceTimersByTime(FIVE_MILLISECOND);
     setupHighScoreTestMocks(FIVE_MILLISECOND, CHAR_POSITION, PUZZLE_CHAR_IDS);
 
-    const response = await request(app)
+    const response = await request(server)
       .post("/game/check")
       .set("Authorization", `Bearer ${token}`)
       .send(data);
@@ -153,13 +153,13 @@ describe("POST /game/check", () => {
   });
 
   it("returns 401 for missing token", async () => {
-    const response = await request(app).post("/game/check");
+    const response = await request(server).post("/game/check");
 
     expect(response.statusCode).toBe(401);
   });
 
   it("returns 403 for invalid token", async () => {
-    const response = await request(app)
+    const response = await request(server)
       .post("/game/check")
       .set("Authorization", `Bearer ${token}x`);
 
