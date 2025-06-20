@@ -1,4 +1,4 @@
-import prisma from "../src/config/prismaClient.js";
+import prisma from "../src/prisma-client.js";
 import fs from "fs/promises";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -53,7 +53,7 @@ const seedDatabase = async () => {
   }
 
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
-  const filePath = path.join(__dirname, "..", "..", "characterData.json");
+  const filePath = path.join(__dirname, "..", "..", "character-data.json");
 
   try {
     console.log("seeding...");
